@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LLM Blueprint — how a language model answers you</title>
+<meta name="description" content="A scroll-driven blueprint of how a large language model turns your question into an answer: tokens, embeddings, attention, and the autoregressive loop.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;600;700&family=IBM+Plex+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/blueprint.css">
+<link rel="stylesheet" href="css/scenes.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='4' y='4' width='24' height='24' fill='none' stroke='%237FDBFF' stroke-width='2'/><path d='M10 16h12M16 10v12' stroke='%237FDBFF' stroke-width='2'/></svg>">
+</head>
+<body>
+
+<!-- sheet chrome -->
+<div class="sheet-grid" aria-hidden="true"></div>
+<div class="sheet-frame" aria-hidden="true"><span class="mark-b"></span></div>
+
+<!-- global controls -->
+<nav class="lang-toggle" aria-label="UI language">
+  <button data-lang="ko">한국어</button>
+  <button data-lang="ja">日本語</button>
+  <button data-lang="en">EN</button>
+</nav>
+<nav class="rail" aria-label="progress"></nav>
+
+<!-- ================= S00 · intro ================= -->
+<section class="scene" id="sc-intro">
+  <div class="intro__wrap">
+    <div class="title-block">
+      <div class="title-block__head">
+        <span class="label" data-i18n="ui.introKicker"></span>
+        <span class="label num">NO. LLM-BP-001</span>
+      </div>
+      <div class="title-block__main">
+        <h1>LLM <span class="thin">BLUEPRINT</span></h1>
+        <p class="title-block__sub" data-i18n="ui.introSub"></p>
+      </div>
+      <div class="title-block__foot">
+        <div><span class="label">SCALE</span><span class="val">CONCEPTUAL</span></div>
+        <div><span class="label">PROJECTION</span><span class="val">SCROLL-DRIVEN</span></div>
+        <div><span class="label">LANG</span><span class="val">KO · JA · EN</span></div>
+        <div><span class="label">REV</span><span class="val">1.0</span></div>
+      </div>
+    </div>
+
+    <div class="q-section-label">
+      <span class="label label--cyan" data-i18n="ui.introPick"></span>
+    </div>
+    <p style="color:var(--ink-dim);font-size:14.5px;max-width:640px;margin-bottom:22px;" data-i18n="ui.introPickSub"></p>
+
+    <div id="q-grid" class="q-grid"></div>
+    <div id="q-custom-zone"></div>
+
+    <div id="chat-mock" class="chat-mock"></div>
+
+    <div class="hint-scroll">
+      <span class="label" data-i18n="ui.scrollHint"></span>
+      <i class="chev"></i><i class="chev"></i>
+    </div>
+  </div>
+</section>
+
+<!-- ================= the pipeline: ONE continuous stage =================
+     A single pinned section. The same token chips morph through every
+     phase; only the caption cards (below) crossfade. -->
+<section class="scene" id="sc-pipeline">
+  <div class="scene__stage"></div>
+
+  <aside class="bp-card phase-card" data-phase="s01">
+    <div class="bp-card__tag" data-i18n="s01.tag"></div>
+    <h2 class="bp-card__title" data-i18n="s01.title"></h2>
+    <p class="bp-card__body" data-i18n="s01.body"></p>
+    <details><summary>DEEP DIVE</summary><div class="bp-card__deep" data-i18n="s01.deep"></div></details>
+  </aside>
+  <aside class="bp-card phase-card" data-phase="s02">
+    <div class="bp-card__tag" data-i18n="s02.tag"></div>
+    <h2 class="bp-card__title" data-i18n="s02.title"></h2>
+    <p class="bp-card__body" data-i18n="s02.body"></p>
+    <details><summary>DEEP DIVE</summary><div class="bp-card__deep" data-i18n="s02.deep"></div></details>
+  </aside>
+  <aside class="bp-card phase-card" data-phase="s03">
+    <div class="bp-card__tag" data-i18n="s03.tag"></div>
+    <h2 class="bp-card__title" data-i18n="s03.title"></h2>
+    <p class="bp-card__body" data-i18n="s03.body"></p>
+    <details><summary>DEEP DIVE</summary><div class="bp-card__deep" data-i18n="s03.deep"></div></details>
+  </aside>
+  <aside class="bp-card phase-card" data-phase="s04">
+    <div class="bp-card__tag" data-i18n="s04.tag"></div>
+    <h2 class="bp-card__title" data-i18n="s04.title"></h2>
+    <p class="bp-card__body" data-i18n="s04.body"></p>
+    <details><summary>DEEP DIVE</summary><div class="bp-card__deep" data-i18n="s04.deep"></div></details>
+  </aside>
+  <aside class="bp-card phase-card" data-phase="s05">
+    <div class="bp-card__tag" data-i18n="s05.tag"></div>
+    <h2 class="bp-card__title" data-i18n="s05.title"></h2>
+    <p class="bp-card__body" data-i18n="s05.body"></p>
+    <details><summary>DEEP DIVE</summary><div class="bp-card__deep" data-i18n="s05.deep"></div></details>
+  </aside>
+  <aside class="bp-card phase-card" data-phase="s06">
+    <div class="bp-card__tag" data-i18n="s06.tag"></div>
+    <h2 class="bp-card__title" data-i18n="s06.title"></h2>
+    <p class="bp-card__body" data-i18n="s06.body"></p>
+    <details><summary>DEEP DIVE</summary><div class="bp-card__deep" data-i18n="s06.deep"></div></details>
+  </aside>
+  <aside class="bp-card phase-card" data-phase="s07">
+    <div class="bp-card__tag" data-i18n="s07.tag"></div>
+    <h2 class="bp-card__title" data-i18n="s07.title"></h2>
+    <p class="bp-card__body" data-i18n="s07.body"></p>
+    <details><summary>DEEP DIVE</summary><div class="bp-card__deep" data-i18n="s07.deep"></div></details>
+  </aside>
+  <aside class="bp-card phase-card" data-phase="s08">
+    <div class="bp-card__tag" data-i18n="s08.tag"></div>
+    <h2 class="bp-card__title" data-i18n="s08.title"></h2>
+    <p class="bp-card__body" data-i18n="s08.body"></p>
+    <details><summary>DEEP DIVE</summary><div class="bp-card__deep" data-i18n="s08.deep"></div></details>
+  </aside>
+  <aside class="bp-card phase-card" data-phase="s09">
+    <div class="bp-card__tag" data-i18n="s09.tag"></div>
+    <h2 class="bp-card__title" data-i18n="s09.title"></h2>
+    <p class="bp-card__body" data-i18n="s09.body"></p>
+    <details><summary>DEEP DIVE</summary><div class="bp-card__deep" data-i18n="s09.deep"></div></details>
+  </aside>
+  <aside class="bp-card phase-card" data-phase="s10">
+    <div class="bp-card__tag" data-i18n="s10.tag"></div>
+    <h2 class="bp-card__title" data-i18n="s10.title"></h2>
+    <p class="bp-card__body" data-i18n="s10.body"></p>
+    <details><summary>DEEP DIVE</summary><div class="bp-card__deep" data-i18n="s10.deep"></div></details>
+  </aside>
+</section>
+
+<!-- ================= S11 · recap + footer ================= -->
+<section class="scene" id="sc-recap">
+  <div class="recap__wrap">
+    <div class="q-section-label">
+      <span class="label label--cyan">SEC.11 — OVERVIEW</span>
+    </div>
+    <h2 class="bp-card__title" style="font-size:clamp(24px,3.4vw,36px);" data-i18n="recap.title"></h2>
+    <p style="color:var(--ink-dim);max-width:560px;" data-i18n="recap.body"></p>
+    <div class="recap__map"></div>
+    <div class="recap__actions"></div>
+    <p class="disclaimer" data-i18n="ui.disclaimer"></p>
+  </div>
+  <footer class="footer">
+    <div class="footer__links"></div>
+    <div class="footer__meta"></div>
+  </footer>
+</section>
+
+<!-- vendor -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<!-- app (plain scripts — works from file:// and GitHub Pages alike) -->
+<script src="js/config.js"></script>
+<script src="data/captions.js"></script>
+<script src="data/questions.data.js"></script>
+<script src="js/tokenizer.js"></script>
+<script src="js/engine/stage.js"></script>
+<script src="js/engine/actors.js"></script>
+<script src="js/engine/i18n.js"></script>
+<script src="js/engine/director.js"></script>
+<script src="js/scenes/s00_intro.js"></script>
+<script src="js/scenes/s11_recap.js"></script>
+<script src="js/phases/p01_send.js"></script>
+<script src="js/phases/p02_tokenize.js"></script>
+<script src="js/phases/p03_embed.js"></script>
+<script src="js/phases/p04_position.js"></script>
+<script src="js/phases/p05_attention.js"></script>
+<script src="js/phases/p06_ffn.js"></script>
+<script src="js/phases/p07_stack.js"></script>
+<script src="js/phases/p08_output.js"></script>
+<script src="js/phases/p09_loop.js"></script>
+<script src="js/phases/p10_assemble.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
