@@ -1,0 +1,12 @@
+name = "llm-blueprint-proxy"
+main = "llm-proxy.js"
+compatibility_date = "2026-06-01"
+
+# Secrets (set with `npx wrangler secret put <NAME>`):
+#   OPENAI_API_KEY   required — your OpenAI-compatible API key
+#   SHARED_KEY       optional — if set, the page must send the same value
+#
+# Optional plain vars:
+# [vars]
+# MODEL = "gpt-4o-mini"
+# OPENAI_BASE_URL = "https://api.openai.com/v1"

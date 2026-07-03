@@ -17,6 +17,7 @@
       const n = qChips.length;
       const step = data.steps[0];
       const cands = step.topK;
+      const chosenIdx = step.chosen || 0;   /* real mode: sampled ≠ always rank 1 */
 
       /* 1 · the sentence has been read: dim all rows except the last */
       const others = qChips.slice(0, -1);
@@ -103,8 +104,8 @@
         y: A.MOBILE ? gaugeY + 300 : A.H * 0.40,
         autoAlpha: 0, scale: 1.6, rotate: -22,
       });
-      tl.to(rows[0].bar, { backgroundColor: "#ffb454", opacity: 0.95, duration: 0.35 }, "+=0.2")
-        .to(rows[0].tok, { color: "#ffb454", duration: 0.35 }, "<")
+      tl.to(rows[chosenIdx].bar, { backgroundColor: "#ffb454", opacity: 0.95, duration: 0.35 }, "+=0.2")
+        .to(rows[chosenIdx].tok, { color: "#ffb454", duration: 0.35 }, "<")
         .to(stamp, { autoAlpha: 1, scale: 1, rotate: -8, duration: 0.45, ease: "back.out(2)" })
         .to({}, { duration: 0.6 });
 

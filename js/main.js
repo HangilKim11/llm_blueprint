@@ -45,8 +45,20 @@
         NS.director.rebuild(ctx);
         history.replaceState(null, "", "?q=" + id);
       },
-      onCustom(question, answer) {
-        state.data = NS.buildCustomQuestion(question, answer);
+      async onCustom(question, answer, onDone) {
+        /* real-values mode when a proxy endpoint is configured;
+           graceful fallback to the offline approximation */
+        if (config.apiEndpoint && !answer) {
+          try {
+            state.data = await NS.fetchRealQuestion(question, config);
+          } catch (e) {
+            console.warn("real-values proxy failed, using approximation:", e);
+            state.data = NS.buildCustomQuestion(question, answer);
+          }
+        } else {
+          state.data = NS.buildCustomQuestion(question, answer);
+        }
+        if (onDone) onDone(state.data);
         NS.director.rebuild(ctx);
         const chat = document.querySelector("#chat-mock");
         if (chat) chat.scrollIntoView({ behavior: "smooth", block: "center" });

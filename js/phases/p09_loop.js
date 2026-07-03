@@ -110,9 +110,12 @@
       /* retarget the existing gauge rows for step s */
       const setStep = (at, s) => {
         const cands = data.steps[s].topK;
+        const chosen = data.steps[s].chosen || 0;
         G.rows.forEach((r, i) => {
           const c = cands[i] || { t: "", p: 0 };
           tl.set(r.tok, { textContent: c.t.trim() || "␣" }, at);
+          tl.set(r.tok, { color: i === chosen ? "#ffb454" : "#eaf6ff" }, at);
+          tl.set(r.bar, { backgroundColor: i === chosen ? "#ffb454" : "#7fdbff" }, at);
           tl.to(r.bar, { width: (c.p * 100).toFixed(1) + "%", duration: 0.45, ease: "power2.out" }, at + 0.05);
           tl.set(r.pct, { textContent: (c.p * 100).toFixed(1) + "%" }, at + 0.3);
         });

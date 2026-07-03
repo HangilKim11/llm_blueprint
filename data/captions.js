@@ -86,10 +86,16 @@ window.LLMBP_CAPTIONS = {
       en: "(optional) answer to visualize — leave empty for a demo sentence",
     },
     customGo: { ko: "이 질문으로 보기", ja: "この質問で見る", en: "Run with this question" },
+    customLoading: { ko: "모델 실행 중…", ja: "モデル実行中…", en: "Running the model…" },
     customHint: {
       ko: "근사 토큰화 사용 · 실제 모델 출력이 아님",
       ja: "近似トークン化 · 実際のモデル出力ではありません",
       en: "approximate tokenization · not a real model output",
+    },
+    customHintReal: {
+      ko: "실제 모델 답변·확률 사용 · 어텐션은 개념도",
+      ja: "実際のモデル回答・確率を使用 · アテンションは概念図",
+      en: "real model answer & probabilities · attention stays conceptual",
     },
     tryAnother: { ko: "다른 질문으로 다시 보기 ↑", ja: "別の質問でもう一度 ↑", en: "Run another question ↑" },
     viewSource: { ko: "GitHub에서 코드 보기", ja: "GitHubでコードを見る", en: "View source on GitHub" },

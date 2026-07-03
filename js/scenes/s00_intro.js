@@ -58,13 +58,22 @@
       go.type = "button";
       go.dataset.i18n = "ui.customGo";
       const hint = el("span", "label", null, row);
-      hint.dataset.i18n = "ui.customHint";
+      /* hint reflects the mode: real proxy vs offline approximation */
+      hint.dataset.i18n = ctx.config.apiEndpoint ? "ui.customHintReal" : "ui.customHint";
 
       openBtn.addEventListener("click", () => form.classList.toggle("open"));
-      go.addEventListener("click", () => {
+      go.addEventListener("click", async () => {
         const q = qIn.value.trim();
         if (!q) { qIn.focus(); return; }
-        ctx.onCustom(q, aIn.value.trim());
+        if (go.disabled) return;
+        go.disabled = true;
+        go.textContent = ctx.i18n.t("ui.customLoading");
+        try {
+          await ctx.onCustom(q, aIn.value.trim());
+        } finally {
+          go.disabled = false;
+          go.textContent = ctx.i18n.t("ui.customGo");
+        }
       });
     },
 

@@ -11,6 +11,15 @@ window.LLMBP_CONFIG = {
    * Tip: appending ?custom=1 to the URL also enables it. */
   enableCustomInput: false,
 
+  /* REAL-VALUES MODE (optional).
+   * Deploy workers/llm-proxy.js to your own Cloudflare account,
+   * then put the worker URL here. Custom questions will use a real
+   * model: real answer, real tokens, real top-k probabilities.
+   * Empty string = approximate offline mode (no server needed).
+   * apiSharedKey must match the SHARED_KEY secret if you set one. */
+  apiEndpoint: "",
+  apiSharedKey: "",
+
   /* Footer links. Empty string hides the entry. */
   author: {
     name:   "Hangil Kim",

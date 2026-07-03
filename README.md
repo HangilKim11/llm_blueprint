@@ -75,11 +75,27 @@ tools/generate_data.py  데이터 베이커
 새 페이즈 추가: `js/phases/`에 모듈을 만들어 `LLMBP.phases.push({id, span, build})`,
 `index.html`에 캡션 카드와 `<script>` 한 줄.
 
+### 실제값 모드 (선택)
+
+커스텀 질문을 **진짜 모델**로 돌릴 수 있습니다 — 실제 답변, 실제 답변 토큰,
+실제 top-k 확률(logprobs). 자신의 Cloudflare 계정과 OpenAI 호환 API 키만 있으면 됩니다:
+
+```bash
+cd workers
+npx wrangler deploy                    # Worker 배포 (무료 플랜 OK)
+npx wrangler secret put OPENAI_API_KEY # API 키는 서버에만 저장
+```
+
+배포된 Worker URL을 `js/config.js`의 `apiEndpoint`에 넣으면 끝.
+질문 토큰화도 js-tiktoken(실제 o200k)으로 자동 전환됩니다.
+단, **어텐션 가중치는 상용 API가 제공하지 않으므로 계속 개념도**입니다.
+
 ### 정직성 고지
 
-이 시각화는 **교육용 개념 재구성**입니다. 어텐션 가중치·확률값은 실제 모델 내부 값이
-아니라 그럴듯하게 생성한 예시이며, 페이지에도 같은 고지가 표시됩니다. 토큰 분할은
-기본적으로 근사이고, `tiktoken`으로 재생성하면 실제 토큰화로 교체됩니다.
+기본 모드의 시각화는 **교육용 개념 재구성**입니다. 어텐션 가중치·확률값은 실제 모델
+내부 값이 아니라 그럴듯하게 생성한 예시이며, 페이지에도 같은 고지가 표시됩니다.
+토큰 분할은 근사이고, `tiktoken`으로 재생성하거나 실제값 모드를 켜면 실제 값으로
+교체됩니다(어텐션 제외).
 
 ---
 
@@ -137,11 +153,27 @@ data/questions.data.js  プリセット9問（自動生成）
 tools/generate_data.py  データベーカー
 ```
 
+### 実測値モード（任意）
+
+カスタム質問を**本物のモデル**で実行できます ― 実際の回答、実際の回答トークン、
+実際の top-k 確率（logprobs）。自分の Cloudflare アカウントと OpenAI 互換 API キーがあれば：
+
+```bash
+cd workers
+npx wrangler deploy                    # Worker をデプロイ（無料プランで可）
+npx wrangler secret put OPENAI_API_KEY # API キーはサーバー側にのみ保存
+```
+
+デプロイした Worker の URL を `js/config.js` の `apiEndpoint` に設定するだけ。
+質問のトークン化も js-tiktoken（実際の o200k）に自動で切り替わります。
+ただし**アテンション重みは商用 API が提供しないため、引き続き概念図**です。
+
 ### 免責
 
-本可視化は**教育目的の概念的な再構成**です。アテンション重み・確率値は実際のモデル
-内部値ではなく、もっともらしく生成した例示です（ページ内にも同じ告知を表示）。
-トークン分割は既定では近似で、`tiktoken` で再生成すると実際のトークン化に置き換わります。
+既定モードの可視化は**教育目的の概念的な再構成**です。アテンション重み・確率値は実際の
+モデル内部値ではなく、もっともらしく生成した例示です（ページ内にも同じ告知を表示）。
+トークン分割は近似で、`tiktoken` での再生成または実測値モードで実際の値に
+置き換わります（アテンションを除く）。
 
 ---
 
@@ -205,12 +237,28 @@ Add a phase: drop a module in `js/phases/` that calls
 `LLMBP.phases.push({id, span, build})`, plus a caption card and one `<script>` line
 in `index.html`.
 
+### Real-values mode (optional)
+
+Custom questions can run against a **real model** — real answer, real answer tokens,
+real top-k probabilities (logprobs). All you need is your own Cloudflare account and
+an OpenAI-compatible API key:
+
+```bash
+cd workers
+npx wrangler deploy                    # deploy the Worker (free plan is fine)
+npx wrangler secret put OPENAI_API_KEY # the key lives server-side only
+```
+
+Point `apiEndpoint` in `js/config.js` at the deployed Worker URL and you're done.
+Question tokenization switches to js-tiktoken (real o200k) automatically.
+Note that **attention weights remain conceptual** — commercial APIs don't expose them.
+
 ### Honesty note
 
-This visualization is a **conceptual reconstruction for teaching**. Attention weights
+The default mode is a **conceptual reconstruction for teaching**. Attention weights
 and probabilities are plausible fabrications, not real model internals (the page says
-so, too). Token splits are approximate by default; regenerate with `tiktoken` for real
-o200k tokenization.
+so, too). Token splits are approximate by default; regenerating with `tiktoken` or
+enabling real-values mode replaces them with the real thing (attention excepted).
 
 ---
 
