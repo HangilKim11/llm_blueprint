@@ -58,8 +58,8 @@
       go.type = "button";
       go.dataset.i18n = "ui.customGo";
       const hint = el("span", "label", null, row);
-      /* hint reflects the mode: real proxy vs offline approximation */
-      hint.dataset.i18n = ctx.config.apiEndpoint ? "ui.customHintReal" : "ui.customHint";
+      /* hint reflects the mode: real backend vs offline approximation */
+      hint.dataset.i18n = NS.hasRealBackend(ctx.config) ? "ui.customHintReal" : "ui.customHint";
 
       openBtn.addEventListener("click", () => form.classList.toggle("open"));
       go.addEventListener("click", async () => {

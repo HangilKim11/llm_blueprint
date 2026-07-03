@@ -10,3 +10,8 @@ __pycache__/
 # local experiments
 _mobile_test.html
 node_modules/
+
+# secrets — local real-values mode (never commit these)
+js/config.local.js
+workers/.dev.vars
+.dev.vars

@@ -46,9 +46,9 @@
         history.replaceState(null, "", "?q=" + id);
       },
       async onCustom(question, answer, onDone) {
-        /* real-values mode when a proxy endpoint is configured;
-           graceful fallback to the offline approximation */
-        if (config.apiEndpoint && !answer) {
+        /* real-values mode when a proxy endpoint or a local key is
+           configured; graceful fallback to the offline approximation */
+        if (NS.hasRealBackend(config) && !answer) {
           try {
             state.data = await NS.fetchRealQuestion(question, config);
           } catch (e) {
