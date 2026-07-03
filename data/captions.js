@@ -138,9 +138,9 @@ window.LLMBP_CAPTIONS = {
       en: "An LLM reads not in words but in pieces called <em>tokens</em>. Frequently co-occurring character chunks earn their own token, and every token has its number (ID) in the vocabulary.",
     },
     deep: {
-      ko: "분할 규칙은 <code>BPE(Byte Pair Encoding)</code>로 학습됩니다: 말뭉치에서 가장 자주 붙어 나오는 쌍을 반복적으로 병합해 어휘를 만들어요. GPT-4o 계열의 어휘(o200k)는 약 20만 개. 어휘가 영어 중심으로 학습되면 한국어·일본어는 더 잘게 쪼개져 같은 내용에 더 많은 토큰 — 즉 더 많은 비용과 시간이 듭니다.",
-      ja: "分割規則は<code>BPE（Byte Pair Encoding）</code>で学習されます。コーパスで最も頻繁に隣り合うペアを繰り返し併合して語彙を作ります。GPT-4o系の語彙（o200k）は約20万。語彙が英語中心だと日本語・韓国語は細かく割れ、同じ内容でもトークン数 ― つまりコストと時間が増えます。",
-      en: "The splitting rules are learned with <code>BPE (Byte Pair Encoding)</code>: repeatedly merge the most frequent adjacent pairs in a corpus to build a vocabulary. The GPT-4o family vocabulary (o200k) has ~200k entries. When the vocabulary is English-heavy, Korean and Japanese fragment finer — more tokens, more cost, more latency for the same content.",
+      ko: "분할 규칙은 <code>BPE(Byte Pair Encoding)</code>로 학습됩니다: 말뭉치에서 가장 자주 붙어 나오는 쌍을 반복적으로 병합해 어휘를 만들어요. GPT-4o 계열의 어휘(o200k)는 약 20만 개. 어휘가 영어 중심으로 학습되면 한국어·일본어는 더 잘게 쪼개져 같은 내용에 더 많은 토큰 — 즉 더 많은 비용과 시간이 듭니다. 분할 기준은 언어학이 아니라 <em>통계</em>라서, 직관에 어긋나는 분해도 정상입니다: 예컨대 \"바다는\"은 바+다는으로 잘리곤 하는데, \"~다는\" 같은 어미 조합이 워낙 자주 등장해 이미 한 토큰으로 병합돼 있기 때문이에요.",
+      ja: "分割規則は<code>BPE（Byte Pair Encoding）</code>で学習されます。コーパスで最も頻繁に隣り合うペアを繰り返し併合して語彙を作ります。GPT-4o系の語彙（o200k）は約20万。語彙が英語中心だと日本語・韓国語は細かく割れ、同じ内容でもトークン数 ― つまりコストと時間が増えます。分割の基準は言語学ではなく<em>統計</em>なので、直感に反する分解も正常です。例えば韓国語の「바다는(海は)」は 바+다는 と切られがちですが、「~다는」という語尾の組み合わせが頻出しすぎて既に1トークンに併合されているためです。",
+      en: "The splitting rules are learned with <code>BPE (Byte Pair Encoding)</code>: repeatedly merge the most frequent adjacent pairs in a corpus to build a vocabulary. The GPT-4o family vocabulary (o200k) has ~200k entries. When the vocabulary is English-heavy, Korean and Japanese fragment finer — more tokens, more cost, more latency for the same content. And the criterion is <em>statistics, not linguistics</em>, so counter-intuitive splits are normal: Korean \"바다는\" (the sea + topic marker) tends to split as 바+다는, because the ending combination \"~다는\" is so frequent it earned its own token.",
     },
   },
 
